@@ -17,7 +17,7 @@
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│                         USER INTERFACES                          │
+│                         USER INTERFACES                         │
 ├─────────────────────────┬───────────────────────────────────────┤
 │   CLI Mode (cli.py)     │   MCP Server Mode (server.py)         │
 │   - Terminal-based      │   - IDE integration (Claude, Cursor)  │
@@ -27,7 +27,7 @@
             │                              │
             ▼                              ▼
 ┌─────────────────────────────────────────────────────────────────┐
-│                      CORE SERVICES LAYER                         │
+│                      CORE SERVICES LAYER                        │
 ├─────────────────────────────────────────────────────────────────┤
 │  fetcher.py                          evaluator.py               │
 │  - Fetches live CVEs from OSV.dev   - Evaluates student fixes   │
@@ -37,11 +37,11 @@
             │                              │
             ▼                              ▼
 ┌─────────────────────────────────────────────────────────────────┐
-│                      EXTERNAL APIS                               │
+│                      EXTERNAL APIS                              │
 ├─────────────────┬─────────────────────┬─────────────────────────┤
 │   OSV.dev       │   GitHub API        │   Google Gemini AI      │
-│   - CVE data    │   - Commit diffs    │   - Code generation     │
-│   - Vulnerability │   - Fix commits   │   - Evaluation          │
+│ - CVE data      │   - Commit diffs    │   - Code generation     │
+│ - Vulnerability │   - Fix commits     │   - Evaluation          │
 │     details     │                     │                         │
 └─────────────────┴─────────────────────┴─────────────────────────┘
 ```

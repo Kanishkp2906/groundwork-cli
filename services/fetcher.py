@@ -13,6 +13,7 @@ client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
 
 # Packages with lots of real, well-documented CVEs with GitHub fix commits
 PYTHON_PACKAGES = [
+    "fastapi",
     "django",
     "flask",
     "requests",
