@@ -81,7 +81,7 @@ CVE reference: {session["scenario"]["cve_id"]}
 
 
 @mcp.tool()
-async def get_hint(session_id: str = "current") -> str:
+async def get_hint() -> str:
     """
     Get the next progressive hint from Arjun.
     Just call with no arguments or pass session_id="current"
@@ -101,7 +101,7 @@ async def get_hint(session_id: str = "current") -> str:
 
 
 @mcp.tool()
-def get_status(session_id: str = "current") -> str:
+def get_status() -> str:
     """
     Get current session status. Call with no arguments or session_id="current"
     """
@@ -134,7 +134,7 @@ if __name__ == "__main__":
 ║     Real CVE Training for Developers         ║
 ╚══════════════════════════════════════════════╝
 """)
-        print(f"  Status  : 🟢 RUNNING")
+        print("  Status  : 🟢 RUNNING")
         print(f"  Started : {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
         print(
             f"  Tools   : get_ticket | evaluate_fix | get_hint | get_status | get_solution"

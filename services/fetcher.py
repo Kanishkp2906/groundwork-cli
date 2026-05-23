@@ -1,10 +1,7 @@
 import httpx
 import asyncio
 import json
-import re
 import os
-import sys
-import subprocess
 from google import genai
 from dotenv import load_dotenv
 
@@ -13,9 +10,7 @@ client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
 
 # Packages with lots of real, well-documented CVEs with GitHub fix commits
 PYTHON_PACKAGES = [
-    "fastapi",
-    "django",
-    "flask",
+    "fastapiflask",
     "requests",
     "pillow",
     "cryptography",
@@ -29,6 +24,7 @@ PYTHON_PACKAGES = [
     "urllib3",
     "twisted",
     "httpx",
+    "django",
 ]
 
 
@@ -357,28 +353,6 @@ def validate_scenario(scenario: dict) -> bool:
         return False
 
     return True
-
-
-def _run_code_safely(code: str) -> dict:
-    """
-    Executes Python code in a subprocess with a hard timeout.
-    Returns stdout, stderr, returncode, and whether it timed out.
-    """
-    try:
-        result = subprocess.run(
-            [sys.executable, "-c", code],
-            capture_output=True,
-            text=True,
-            timeout=5,  # hard kill after 5 seconds
-        )
-        return {
-            "stdout": result.stdout,
-            "stderr": result.stderr,
-            "returncode": result.returncode,
-            "timed_out": False,
-        }
-    except subprocess.TimeoutExpired:
-        return {"stdout": "", "stderr": "Timed out", "returncode": 1, "timed_out": True}
 
 
 async def get_live_scenario(difficulty: str = "medium") -> dict:
