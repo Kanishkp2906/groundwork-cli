@@ -16,11 +16,13 @@ GroundWork is a terminal-based training tool that pulls real-world Common Vulner
 * Python
 * JavaScript / Node.js
 * Java
-* C/C++
+* C++
 
 ## Installation
 
 GroundWork requires **macOS or Linux** (Windows is not natively supported due to strict Unix `tty` dependencies) and **Python 3.10+**.
+
+You can install the CLI directly from PyPI:
 
 ```bash
 pip install groundwork-cli
@@ -46,13 +48,40 @@ Select your target language from the interactive menu. Once a ticket is loaded, 
 
 ## Configuration
 
-By default, the CLI connects to the public GroundWork production server. If you are hosting your own GroundWork FastAPI backend for local development or an internal corporate network, you can override the target API using an environment variable:
+By default, the CLI connects to the official GroundWork production server. If you are hosting your own GroundWork FastAPI backend for local development or an internal corporate network, you can override the target API using an environment variable:
 
 ```bash
 export GROUNDWORK_URL="http://localhost:8000"
 groundwork
 
 ```
+
+## Local Development
+
+If you want to contribute to the CLI or run it from source:
+
+1. Clone the repository:
+```bash
+git clone https://github.com/yourusername/groundwork-cli.git
+cd groundwork-cli
+
+```
+
+
+2. Install the package in editable mode:
+```bash
+pip install -e .
+
+```
+
+
+3. Run the CLI:
+```bash
+groundwork
+
+```
+
+
 
 ## License
 

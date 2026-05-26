@@ -1,0 +1,17 @@
+groundwork/
+├── .git/
+├── .gitignore               <-- Root gitignore (ignore .env, .venv, etc.)
+├── README.md                <-- High-level overview of the whole project
+│
+├── groundwork-server/       <-- Backend folder
+│   ├── requirements.txt     (or Pipfile/poetry.lock)
+│   ├── .env                 (Never commit this!)
+│   ├── server.py
+│   └── services/
+│
+└── groundwork-cli/          <-- Frontend folder
+    ├── pyproject.toml       (Your hatchling config)
+    ├── README.md            (The specific CLI readme you just generated)
+    └── groundwork/
+        ├── __init__.py
+        └── cli.py

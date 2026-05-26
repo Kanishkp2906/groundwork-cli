@@ -4,20 +4,29 @@ build-backend = "hatchling.build"
 
 [project]
 name = "groundwork-cli"
-version = "0.1.0"
+version = "0.1.2"
 description = "Real CVE training for developers — fix production bugs in your terminal"
 readme = "README.md"
 requires-python = ">=3.10"
 license = { text = "MIT" }
 authors = [
-  { name = "Your Name", email = "your@email.com" }
+  { name = "Kanishk", email = "kanishkprasad03@gmail.com" }
 ]
 dependencies = [
   "httpx",
+]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Environment :: Console",
+    "Operating System :: POSIX :: Linux",
+    "Operating System :: MacOS :: MacOS X",
 ]
 
 [project.scripts]
 groundwork = "groundwork.cli:main"
 
 [project.urls]
-Homepage = "https://github.com/yourusername/groundwork-cli"
+Homepage = "https://github.com/kanishkP2906/groundwork-cli"
+
+[tool.hatch.build.targets.wheel]
+packages = ["groundwork"]

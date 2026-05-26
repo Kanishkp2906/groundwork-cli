@@ -11,9 +11,10 @@ from language_conf import LANGUAGE_CONF
 load_dotenv()
 client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
 groq_client = Groq(api_key=os.getenv("GROQ_API_KEY"))
+redis_url = os.getenv("UPSTASH_REDIS_URL")
 
 try:
-    redis_manager = redis.Redis(host="localhost", port=6379, decode_responses=True)
+    redis_manager = redis.Redis.from_url(redis_url)
 
     if redis_manager.ping():
         print("Connected to redis successfully.")

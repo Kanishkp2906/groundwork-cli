@@ -12,9 +12,14 @@ import json
 import uuid
 import redis
 import uvicorn
+import os
+
+load_dotenv()
+
+redis_url = os.getenv("UPSTASH_REDIS_URL")
 
 try:
-    redis_manager = redis.Redis(host="localhost", port=6379, decode_responses=True)
+    redis_manager = redis.Redis.from_url(redis_url)
 
     if redis_manager.ping():
         print("Connected to redis successfully.")
@@ -22,7 +27,6 @@ try:
 except redis.ConnectionError as e:
     print(f"Error connecting to redis: {e}")
 
-load_dotenv()
 
 limiter = Limiter(key_func=get_remote_address)
 

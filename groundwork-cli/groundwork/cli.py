@@ -4,14 +4,17 @@ import sys
 import tty
 import termios
 import itertools
-from slowapi.errors import RateLimitExceeded
 
-SERVER_URL = "http://0.0.0.0:8000"
+SERVER_URL = "https://kanishkp2906-groundwork-server.hf.space"
 CLI_SECRET_KEY = "my_groundwork_secret_key"
 
 
 def main():
-    asyncio.run(run())
+    try:
+        asyncio.run(run())
+    except KeyboardInterrupt:
+        print("\nExiting GroundWork. Keep fixing bugs! 👋")
+        sys.exit(0)
 
 
 async def spinner(message: str, done_event: asyncio.Event):
@@ -153,10 +156,6 @@ async def run():
                 print(f"❌ Server returned an error ({e.response.status_code}).")
                 print("   Please try again in a moment.")
                 return
-            except RateLimitExceeded:
-                done_event.set()
-                await spinner_task
-                print("❌ Rate limit exceed. Please try again after 2 minutes.")
             except Exception:
                 done_event.set()
                 await spinner_task
@@ -301,8 +300,4 @@ async def run():
 
 
 if __name__ == "__main__":
-    try:
-        main()
-    except KeyboardInterrupt:
-        print("\nExiting GroundWork. Keep fixing bugs! 👋")
-        sys.exit(0)
+    main()
