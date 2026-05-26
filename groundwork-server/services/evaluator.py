@@ -1,7 +1,10 @@
 from google import genai
-import json, os
+from groq import Groq
+import json
+import os
 
 client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
+groq_client = Groq(api_key=os.getenv("GROQ_API_KEY"))
 
 
 async def evaluate_student_fix(student_code: str, scenario: dict) -> dict:
@@ -59,15 +62,24 @@ Scoring guide:
 - 0-39   = FAIL: wrong approach, patched symptom, or didn't understand what was vulnerable
 """
 
-    response = client.models.generate_content(
-        model="gemini-2.5-flash-lite", contents=prompt
+    # response = client.models.generate_content(
+    #    model="gemini-2.5-flash-lite", contents=prompt
+    # )
+
+    ## Strip any markdown fences if Gemini adds them
+    # raw = response.text.strip()
+
+    response = groq_client.chat.completions.create(
+        model="llama-3.3-70b-versatile",
+        messages=[{"role": "user", "content": prompt}],
+        temperature=0.5,
+        max_tokens=2000,
     )
 
-    # Strip any markdown fences if Gemini adds them
-    raw = response.text.strip()
+    raw = response.choices[0].message.content.strip()
     if raw.startswith("```"):
         raw = raw.split("```")[1]
         if raw.startswith("json"):
             raw = raw[4:]
 
-    return json.loads(raw.strip())
+    return json.loads(raw.strip(), strict=False)
