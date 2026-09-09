@@ -70,7 +70,7 @@ Scoring guide:
     # raw = response.text.strip()
 
     response = groq_client.chat.completions.create(
-        model="llama-3.3-70b-versatile",
+        model="openai/gpt-oss-20b",
         messages=[{"role": "user", "content": prompt}],
         temperature=0.5,
         max_tokens=2000,
