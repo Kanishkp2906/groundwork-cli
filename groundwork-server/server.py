@@ -20,6 +20,7 @@ redis_url = os.getenv("UPSTASH_REDIS_URL")
 
 try:
     redis_manager = redis.Redis.from_url(redis_url)
+    # redis_manager = redis.Redis(host="localhost", port="6379", decode_responses=True)
 
     if redis_manager.ping():
         print("Connected to redis successfully.")
@@ -62,7 +63,7 @@ async def root(request: Request):
     }
 
 
-@app.get("/ticket")
+@app.get("/{language}/ticket")
 @limiter.limit("8/minute")
 async def get_ticket(request: Request, language: str = "python"):
 
@@ -119,7 +120,7 @@ async def evaluate(request: Request, req: EvaluateRequest):
     return result
 
 
-@app.get("/hint")
+@app.get("/{session_id}/hint")
 @limiter.limit("8/minute")
 async def get_hint(request: Request, session_id: str):
     """
@@ -149,9 +150,9 @@ async def get_hint(request: Request, session_id: str):
     }
 
 
-@app.get("/solution")
+@app.get("/{session_id}/solution")
 @limiter.limit("8/minute")
-async def get_solution(request: Request, session_id):
+async def get_solution(request: Request, session_id: str):
     """
     Reveal the real fix from the GitHub commit.
     Call after evaluate.

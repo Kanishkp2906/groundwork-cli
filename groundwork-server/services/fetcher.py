@@ -15,6 +15,7 @@ redis_url = os.getenv("UPSTASH_REDIS_URL")
 
 try:
     redis_manager = redis.Redis.from_url(redis_url)
+    # redis_manager = redis.Redis(host="localhost", port="6379", decode_responses=True)
 
     if redis_manager.ping():
         print("Connected to redis successfully.")
@@ -498,12 +499,6 @@ async def get_live_scenario(language: str = "python") -> dict:
             code = await extract_code_from_commit(
                 cve["fix_commit_url"], github_token, language=language
             )
-            if not code or not code.get("buggy_code"):
-                print(f"[DEBUG] {cve_id}: no usable code")
-                continue
-
-            # Count non-empty, non-comment lines
-
             if not code or not code.get("buggy_code"):
                 print(f"[DEBUG] {cve_id}: no usable code")
                 continue

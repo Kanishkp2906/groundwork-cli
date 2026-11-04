@@ -9,3 +9,16 @@ wheels/
 # Virtual environments
 .venv
 .env
+
+#go files
+Binaries
+*.exe
+*.test
+*.out
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
