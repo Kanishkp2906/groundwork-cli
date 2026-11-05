@@ -1,58 +1,72 @@
 package main
 
 import (
-	"fmt"
-	"strings"
-
 	"charm.land/lipgloss/v2"
 )
 
-var bannerStyle = lipgloss.NewStyle().Foreground(lipgloss.Color("252"))
+var (
+	// Unicode block logo
+	logoArtStyle = lipgloss.NewStyle().
+			Foreground(lipgloss.Color("207")).
+			Bold(true)
 
-// The GroundWork wordmark, identical to the art groundwork-cli prints at
-// startup. The one backtick inside the art is written as a placeholder (§)
-// because Go raw string literals cannot contain backticks.
-const groundworkArtRaw = `   ____                           ___        __         §
-  / ___|_ __ ___  _   _ _ __   __| \ \      / /__  _ __| | __
- | |  _| '__/ _ \| | | | '_ \ / _§ |\ \ /\ / / _ \| '__| |/ /
- | |_| | | | (_) | |_| | | | | (_| | \ V  V / (_) | |  |   <
-  \____|_|  \___/ \__,_|_| |_|\__,_|  \_/\_/ \___/|_|  |_|\_\`
+	logoSubStyle = lipgloss.NewStyle().
+			Foreground(lipgloss.Color("245")).
+			Italic(true)
 
-// banner line used by groundwork-cli, kept verbatim.
-const bannerText = "Real CVE Training for Developers"
+	// Simple container
+	logoBoxStyle = lipgloss.NewStyle().
+			Border(lipgloss.RoundedBorder()).
+			BorderForeground(lipgloss.Color("63")).
+			Padding(0, 2).
+			MarginTop(1).
+			MarginBottom(1)
+)
 
-func groundworkArt() string {
-	return strings.ReplaceAll(groundworkArtRaw, "§", "\x60")
-}
+// The new Unicode block logo
+const groundworkLogo = " ▗▄▄▖▗▄▄▖  ▗▄▖ ▗▖ ▗▖▗▖  ▗▖▗▄▄▄ ▗▖ ▗▖ ▗▄▖ ▗▄▄▖ ▗▖ ▗▖\n" +
+	"▐▌   ▐▌ ▐▌▐▌ ▐▌▐▌ ▐▌▐▛▚▖▐▌▐▌  █▐▌ ▐▌▐▌ ▐▌▐▌ ▐▌▐▌▗▞▘\n" +
+	"▐▌▝▜▌▐▛▀▚▖▐▌ ▐▌▐▌ ▐▌▐▌ ▝▜▌▐▌  █▐▌ ▐▌▐▌ ▐▌▐▛▀▚▖▐▛▚▖ \n" +
+	"▝▚▄▞▘▐▌ ▐▌▝▚▄▞▘▝▚▄▞▘▐▌  ▐▌▐▙▄▄▀▐▙█▟▌▝▚▄▞▘▐▌ ▐▌▐▌ ▐▌"
 
-const bannerWidth = 60
-
-func bannerBox() string {
-	inner := bannerText
-	padLeft := (bannerWidth - 2 - len(inner)) / 2
-	padRight := bannerWidth - 2 - len(inner) - padLeft
-	lines := []string{
-		"╔" + strings.Repeat("═", bannerWidth-2) + "╗",
-		"║" + strings.Repeat(" ", padLeft) + inner + strings.Repeat(" ", padRight) + "║",
-		"╚" + strings.Repeat("═", bannerWidth-2) + "╝",
-	}
-	return bannerStyle.Render(strings.Join(lines, "\n"))
-}
-
-// logoBlock renders the wordmark plus the banner box, LEFT ALIGNED.
+// logoBlock returns the Unicode logo with centered subtitle.
 func logoBlock(width int) string {
-	if width <= 0 {
-		width = bannerWidth
-	}
-	block := bannerStyle.Render(groundworkArt()) + "\n" + bannerBox()
-	return block // left-aligned; no PlaceHorizontal centering
+	art := logoArtStyle.Render(groundworkLogo)
+
+	// Art left-aligned, subtitle centered
+	subtitleStyled := lipgloss.NewStyle().
+		Foreground(lipgloss.Color("245")).
+		Italic(true).
+		Width(lipgloss.Width(art)).
+		Align(lipgloss.Center).
+		Render("Real CVE Training for Developers")
+
+	content := lipgloss.JoinVertical(lipgloss.Left, art, "", subtitleStyled)
+
+	boxed := logoBoxStyle.Render(content)
+
+	return lipgloss.PlaceHorizontal(width, lipgloss.Left, boxed)
 }
 
-// smallLogo is used on screens where the full art would be noise.
-func smallLogo() string {
-	return fmt.Sprintf("%s %s %s",
-		spinnerStyle.Render("◆"),
-		bannerStyle.Render("groundwork"),
-		dimStyle.Render("real CVE training"),
-	)
+// smallLogo returns a compact version for loading screens.
+func smallLogo(width int) string {
+	art := logoArtStyle.Render(groundworkLogo)
+
+	// For small logo, center the subtitle
+	subtitleStyled := lipgloss.NewStyle().
+		Foreground(lipgloss.Color("245")).
+		Italic(true).
+		Width(lipgloss.Width(art)).
+		Align(lipgloss.Center).
+		Render("Real CVE Training for Developers")
+
+	content := lipgloss.JoinVertical(lipgloss.Left, art, "", subtitleStyled)
+
+	boxed := lipgloss.NewStyle().
+		Border(lipgloss.RoundedBorder()).
+		BorderForeground(lipgloss.Color("63")).
+		Padding(0, 2).
+		Render(content)
+
+	return lipgloss.PlaceHorizontal(width, lipgloss.Left, boxed)
 }

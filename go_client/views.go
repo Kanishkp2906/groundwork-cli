@@ -55,31 +55,34 @@ func (a app) View() tea.View {
 		return tea.NewView("")
 	}
 
+	var v tea.View
+
 	switch a.screen {
 	case screenSelect:
-		return tea.NewView(a.selectModel.view(a.width))
+		v = tea.NewView(a.selectModel.view(a.width, a.height))
 
 	case screenLoading:
-		return tea.NewView(a.loadingView())
+		v = tea.NewView(a.loadingView())
 
 	case screenMain:
-		return tea.NewView(a.mainView())
+		v = tea.NewView(a.mainView())
 
 	case screenCode:
-		v := tea.NewView(a.codeViewer.view())
-		v.AltScreen = true
-		return v
+		v = tea.NewView(a.codeViewer.view())
 
 	case screenEditor:
-		v := tea.NewView(a.editor.view())
-		v.AltScreen = true
-		return v
+		v = tea.NewView(a.editor.view())
 
 	case screenError:
-		return tea.NewView(a.errorView())
+		v = tea.NewView(a.errorView())
+
+	default:
+		v = tea.NewView("")
 	}
 
-	return tea.NewView("")
+	// Use alternate screen buffer for all screens (full-screen TUI)
+	v.AltScreen = true
+	return v
 }
 
 // Cursor places the terminal cursor in the editor when it is open.
@@ -96,7 +99,7 @@ func (a app) Cursor() *tea.Cursor {
 	return c
 }
 
-// loading view: logo + Points spinner + status text (exact request wording).
+// loading view: full screen with logo + Points spinner + status text.
 func (a app) loadingView() string {
 	fetchingStyle := lipgloss.NewStyle().Foreground(textFG)
 	line := fmt.Sprintf("%s %s", a.spinner.View(), fetchingStyle.Render("Fetching CVEs for "+a.lang+"..."))
@@ -104,8 +107,12 @@ func (a app) loadingView() string {
 	sub := dimStyle.Render("The CVE pipeline can take up to a minute — hold tight.")
 	quitLine := dimStyle.Render("ctrl+c to cancel")
 
-	body := strings.Join([]string{
-		logoBlock(a.width),
+	// Use small logo for loading
+	logo := smallLogo(a.width)
+
+	// Build content
+	content := strings.Join([]string{
+		logo,
 		"",
 		"  " + line,
 		"  " + sub,
@@ -113,15 +120,19 @@ func (a app) loadingView() string {
 		"  " + quitLine,
 	}, "\n")
 
-	return body
+	// Left-align vertically in the terminal
+	return lipgloss.Place(a.width, a.height, lipgloss.Left, lipgloss.Center, content)
 }
 
 // mainView: rendered document filling the screen, status, busy line and help.
 func (a app) mainView() string {
-	var parts []string
-	parts = append(parts, a.vp.View())
+	// Viewport takes most of the screen
+	vpContent := a.vp.View()
 
 	status := a.statusLine()
+
+	var parts []string
+	parts = append(parts, vpContent)
 	parts = append(parts, status)
 
 	if a.busy == busyEval {
@@ -160,5 +171,5 @@ func (a app) errorView() string {
 	}, "  ·  "))
 
 	frame := lipgloss.JoinVertical(lipgloss.Center, card, "", instructions)
-	return lipgloss.Place(a.width, max(10, a.height), lipgloss.Center, lipgloss.Center, frame)
+	return lipgloss.Place(a.width, a.height, lipgloss.Center, lipgloss.Center, frame)
 }

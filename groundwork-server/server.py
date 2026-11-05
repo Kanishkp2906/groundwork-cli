@@ -4,7 +4,7 @@ from slowapi.util import get_remote_address
 from slowapi.errors import RateLimitExceeded
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-from services.fetcher import get_live_scenario
+from services.new_fetcher import get_live_scenario
 from services.evaluator import evaluate_student_fix
 from dotenv import load_dotenv
 import time

@@ -80,10 +80,10 @@ func (e *editor) resize(w, h int) {
 	if !e.ready {
 		return
 	}
-	// editor screen = 1 title line + textarea + 1 button line + 1 help line;
-	// the textarea's own border takes 2 rows.
+	// editor screen = 1 title line + textarea + 1 button line (with margin) + 1 help line;
+	// the textarea's own border takes 2 rows. Reserve 6 lines for title, button margin, button, help.
 	e.ta.SetWidth(max(20, w))
-	e.ta.SetHeight(max(4, h-4))
+	e.ta.SetHeight(max(4, h-6))
 }
 
 // cursor gives a terminal cursor position adjusted for the editor layout.
@@ -111,6 +111,6 @@ func (e editor) view() string {
 	title := headerBarStyle.Render(fmt.Sprintf(" ✎ %s ", strings.TrimSpace(e.title)))
 	taView := e.ta.View()
 	btnView := buttonStyle.Render("[ Ctrl+S to Submit ]")
-	help := dimStyle.Render("  ctrl+s submit · esc back (fix kept) · tab indent · enter newline")
+	help := dimStyle.Render("  ctrl+s submit · q quit · b back (fix kept) · tab indent · enter newline")
 	return strings.Join([]string{title, taView, btnView, help}, "\n")
 }

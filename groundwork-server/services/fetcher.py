@@ -5,23 +5,11 @@ import os
 from google import genai
 from groq import Groq
 from dotenv import load_dotenv
-import redis
 from language_conf import LANGUAGE_CONF
 
 load_dotenv()
 client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
 groq_client = Groq(api_key=os.getenv("GROQ_API_KEY"))
-redis_url = os.getenv("UPSTASH_REDIS_URL")
-
-try:
-    redis_manager = redis.Redis.from_url(redis_url)
-    # redis_manager = redis.Redis(host="localhost", port="6379", decode_responses=True)
-
-    if redis_manager.ping():
-        print("Connected to redis successfully.")
-
-except redis.ConnectionError as e:
-    print(f"Error connecting to redis: {e}")
 
 
 async def fetch_cves(language: str = "python", limit: int = 200) -> list:

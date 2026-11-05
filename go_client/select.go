@@ -6,6 +6,7 @@ import (
 
 	"charm.land/bubbles/v2/key"
 	tea "charm.land/bubbletea/v2"
+	"charm.land/lipgloss/v2"
 )
 
 // languageOptions mirrors the language list of groundwork-cli. The Slug is what
@@ -62,15 +63,18 @@ func (m selectModel) update(msg tea.Msg) (selectModel, tea.Cmd) {
 	return m, nil
 }
 
-func (m selectModel) view(width int) string {
+func (m selectModel) view(width, height int) string {
 	var b strings.Builder
 
+	// Logo
 	b.WriteString(logoBlock(width))
 	b.WriteString("\n\n")
+
+	// Title
 	b.WriteString(optionsTitleStyle.Render("Select a language to debug a real CVE:"))
-	// A blank line between the heading and the first list item.
 	b.WriteString("\n\n")
 
+	// Language options
 	for i, lang := range languageOptions {
 		label := fmt.Sprintf("%d. %s", i+1, lang.Label)
 		if i == m.cursor {
@@ -88,6 +92,7 @@ func (m selectModel) view(width int) string {
 		b.WriteString("\n")
 	}
 
+	// Help line
 	b.WriteString("\n")
 	b.WriteString(dimStyle.Render(strings.Join([]string{
 		hintPair(m.keys.moveUp),
@@ -97,7 +102,10 @@ func (m selectModel) view(width int) string {
 	}, "  ·  ")))
 	b.WriteString("\n")
 
-	return b.String()
+	content := b.String()
+
+	// Left-align the entire content vertically in the terminal
+	return lipgloss.Place(width, height, lipgloss.Left, lipgloss.Center, content)
 }
 
 func hintPair(b key.Binding) string {

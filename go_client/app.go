@@ -294,6 +294,16 @@ func (a *app) handleEditor(msg tea.KeyPressMsg) tea.Cmd {
 		a.editor.deactivate()
 		a.screen = screenMain
 		return a.submitFix()
+	case msg.String() == "q":
+		// q quits the entire application
+		a.quit = true
+		return tea.Quit
+	case msg.String() == "b":
+		// b goes back to main screen (fix kept)
+		a.editor.deactivate()
+		a.screen = screenMain
+		a.status = "Fix kept — press s to submit it."
+		a.statusOK = true
 	case msg.String() == "tab":
 		// Tab inserts indentation (4 spaces)
 		a.editor.ta.InsertString("    ")

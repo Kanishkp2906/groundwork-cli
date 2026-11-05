@@ -66,7 +66,7 @@ func ticketMarkdown(t *Ticket) string {
 		severityFlag(t.Ticket.Severity), t.Ticket.Severity, t.CveID, t.Package)
 	fmt.Fprintf(&b, "> **%s**\n\n", strings.TrimSpace(t.Ticket.Title))
 	b.WriteString(strings.TrimSpace(t.Ticket.Description))
-	b.WriteString("\n\n## 🐛 Buggy code\n\n")
+	b.WriteString("\n\n## Buggy code\n\n")
 	// Keep the code in a fenced block with its original indentation and line
 	// breaks so glamour highlights it without mangling the source.
 	fmt.Fprintf(&b, "%s%s\n%s\n%s\n", codeFence(t.BuggyCode), codeLang, t.BuggyCode, codeFence(t.BuggyCode))
