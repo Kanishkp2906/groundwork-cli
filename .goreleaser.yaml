@@ -1,8 +1,3 @@
-# .goreleaser.yaml
-# Cross-platform release configuration for GroundWork TUI
-# Install: go install github.com/goreleaser/goreleaser@latest
-# Run: goreleaser release --clean
-
 version: 2
 project_name: groundwork
 
@@ -63,64 +58,5 @@ release:
   draft: false
   prerelease: auto
 
-brews:
-  - name: groundwork
-    tap:
-      owner: Kanishkp2906
-      name: homebrew-tap
-    folder: Formula
-    homepage: "https://github.com/Kanishkp2906/groundwork-cli"
-    description: "GroundWork TUI - Real CVE Training for Developers"
-    license: "MIT"
-    install: |
-      bin.install "groundwork"
-    test: |
-      system "#{bin}/groundwork --help"
-
-scoop:
-  bucket:
-    owner: Kanishkp2906
-    name: scoop-bucket
-  homepage: "https://github.com/Kanishkp2906/groundwork-cli"
-  description: "GroundWork TUI - Real CVE Training for Developers"
-  license: "MIT"
-
-chocolatey:
-  name: groundwork
-  title: "GroundWork TUI"
-  authors: ["kanishkp"]
-  owners: ["kanishkp"]
-  description: "GroundWork TUI - Real CVE Training for Developers"
-  summary: "A terminal UI for practicing real CVE fixes"
-  projectUrl: "https://github.com/Kanishkp2906/groundwork-cli"
-  licenseUrl: "https://github.com/Kanishkp2906/groundwork-cli/blob/main/LICENSE"
-  iconUrl: "https://github.com/Kanishkp2906/groundwork-cli/raw/main/icon.png"
-  tags: ["tui", "cve", "security", "training", "developer-tools"]
-  packageSourceUrl: "https://github.com/Kanishkp2906/groundwork-cli/releases/download/v{{.Version}}/groundwork_{{.Version}}_windows_amd64.zip"
-  checksumUrl: "https://github.com/Kanishkp2906/groundwork-cli/releases/download/v{{.Version}}/checksums.txt"
-
-docker:
-  - image_templates:
-      - "ghcr.io/kanishkp2906/groundwork:{{ .Version }}"
-      - "ghcr.io/kanishkp2906/groundwork:latest"
-    dockerfile: Dockerfile
-    build_flag_templates:
-      - "--platform=linux/amd64,linux/arm64"
-
-announce:
-  twitter:
-    enabled: false
-  mastodon:
-    enabled: false
-  bluesky:
-    enabled: false
-  linkedin:
-    enabled: false
-  reddit:
-    enabled: false
-  discord:
-    enabled: false
-  slack:
-    enabled: false
-  teams:
-    enabled: false
+# Note: Homebrew, Scoop, Chocolatey, Docker configs moved to separate files
+# or removed for v2. Use goreleaser's new config format if needed.
