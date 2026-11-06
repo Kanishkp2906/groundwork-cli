@@ -1,4 +1,7 @@
-# GroundWork TUI
+ ▗▄▄▖▗▄▄▖  ▗▄▖ ▗▖ ▗▖▗▖  ▗▖▗▄▄▄ ▗▖ ▗▖ ▗▄▖ ▗▄▄▖ ▗▖ ▗▖
+▐▌   ▐▌ ▐▌▐▌ ▐▌▐▌ ▐▌▐▛▚▖▐▌▐▌  █▐▌ ▐▌▐▌ ▐▌▐▌ ▐▌▐▌▗▞▘
+▐▌▝▜▌▐▛▀▚▖▐▌ ▐▌▐▌ ▐▌▐▌ ▝▜▌▐▌  █▐▌ ▐▌▐▌ ▐▌▐▛▀▚▖▐▛▚▖ 
+▝▚▄▞▘▐▌ ▐▌▝▚▄▞▘▝▚▄▞▘▐▌  ▐▌▐▙▄▄▀▐▙█▟▌▝▚▄▞▘▐▌ ▐▌▐▌ ▐▌
 
 > **Real CVE Training for Developers** — A terminal UI for practicing real CVE fixes in your terminal.
 
