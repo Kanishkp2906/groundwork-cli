@@ -4,6 +4,7 @@
 ▐▌▝▜▌▐▛▀▚▖▐▌ ▐▌▐▌ ▐▌▐▌ ▝▜▌▐▌  █▐▌ ▐▌▐▌ ▐▌▐▛▀▚▖▐▛▚▖ 
 ▝▚▄▞▘▐▌ ▐▌▝▚▄▞▘▝▚▄▞▘▐▌  ▐▌▐▙▄▄▀▐▙█▟▌▝▚▄▞▘▐▌ ▐▌▐▌ ▐▌
 
+
 > **Real CVE Training for Developers** — A terminal UI for practicing real CVE fixes in your terminal.
 
 ![GroundWork TUI Demo](demo.gif)
@@ -12,16 +13,16 @@
 
 ### Linux / macOS
 ```bash
-curl -fsSL https://raw.githubusercontent.com/kanishkp/groundwork/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/Kanishkp2906/groundwork-cli/main/install.sh | bash
 ```
 
 ### Windows (PowerShell)
 ```powershell
-iwr -useb https://raw.githubusercontent.com/kanishkp/groundwork/main/install.ps1 | iex
+iwr -useb https://raw.githubusercontent.com/Kanishkp2906/groundwork-cli/main/install.ps1 | iex
 ```
 
 ### Manual Download
-Download the latest release for your platform from [Releases](https://github.com/kanishkp/groundwork/releases).
+Download the latest release for your platform from [Releases](https://github.com/Kanishkp2906/groundwork-cli/releases).
 
 ---
 

@@ -1,7 +1,7 @@
 #!/bin/bash
 # install.sh - GroundWork TUI one-line installer
-# Usage: curl -fsSL https://raw.githubusercontent.com/kanishkp/groundwork/main/install.sh | bash
-# Or: wget -qO- https://raw.githubusercontent.com/kanishkp/groundwork/main/install.sh | bash
+# Usage: curl -fsSL https://raw.githubusercontent.com/Kanishkp2906/groundwork-cli/main/install.sh | bash
+# Or: wget -qO- https://raw.githubusercontent.com/Kanishkp2906/groundwork-cli/main/install.sh | bash
 
 set -euo pipefail
 
@@ -12,10 +12,10 @@ YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
-REPO="kanishkp/groundwork"
+REPO="Kanishkp2906/groundwork-cli"
 BINARY_NAME="groundwork"
 INSTALL_DIR="${HOME}/.local/bin"
-GITHUB_API="https://api.github.com/repos/kanishkp/groundwork"
+GITHUB_API="https://api.github.com/repos/Kanishkp2906/groundwork-cli"
 
 # Detect OS and architecture
 detect_platform() {
@@ -54,7 +54,7 @@ detect_platform() {
 # Get latest release version
 get_latest_version() {
     echo -e "${BLUE}Fetching latest release...${NC}" >&2
-    VERSION=$(curl -fsSL "https://api.github.com/repos/kanishkp/groundwork/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')
+    VERSION=$(curl -fsSL "https://api.github.com/repos/Kanishkp2906/groundwork-cli/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')
     if [ -z "${VERSION}" ]; then
         echo -e "${RED}Failed to get latest version${NC}" >&2
         exit 1
@@ -65,10 +65,10 @@ get_latest_version() {
 # Download and install
 install_binary() {
     local version="${1}"
-    local url="https://github.com/kanishkp/groundwork/releases/download/${version}/groundwork_${version#v}_${PLATFORM}.tar.gz"
+    local url="https://github.com/Kanishkp2906/groundwork-cli/releases/download/${version}/groundwork_${version#v}_${PLATFORM}.tar.gz"
 
     if [[ "${OSTYPE}" == "msys" || "${OSTYPE}" == "cygwin" || "${OSTYPE}" == "win32" ]]; then
-        url="https://github.com/kanishkp/groundwork/releases/download/${version}/groundwork_${version#v}_${PLATFORM}.zip"
+        url="https://github.com/Kanishkp2906/groundwork-cli/releases/download/${version}/groundwork_${version#v}_${PLATFORM}.zip"
     fi
 
     echo -e "${BLUE}Downloading groundwork ${version} for ${PLATFORM}...${NC}" >&2

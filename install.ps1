@@ -6,7 +6,7 @@
     Downloads and installs the latest GroundWork TUI release from GitHub.
 
 .EXAMPLE
-    iwr -useb https://raw.githubusercontent.com/kanishkp/groundwork/main/install.ps1 | iex
+    iwr -useb https://raw.githubusercontent.com/Kanishkp2906/groundwork-cli/main/install.ps1 | iex
 
 .NOTES
     Requires PowerShell 5.1+
@@ -25,9 +25,9 @@ param(
 $ErrorActionPreference = 'Stop'
 $ProgressPreference = 'SilentlyContinue'
 
-$REPO = "kanishkp/groundwork"
+$REPO = "Kanishkp2906/groundwork-cli"
 $BINARY_NAME = "groundwork.exe"
-$GITHUB_API = "https://api.github.com/repos/kanishkp/groundwork"
+$GITHUB_API = "https://api.github.com/repos/Kanishkp2906/groundwork-cli"
 
 Write-Host "╔══════════════════════════════════════╗" -ForegroundColor Blue
 Write-Host "║     GroundWork TUI Installer         ║" -ForegroundColor Blue
@@ -50,12 +50,12 @@ Write-Host "Detected platform: $platform" -ForegroundColor Green
 
 # Get latest release
 Write-Host "Fetching latest release..." -ForegroundColor Blue
-$release = Invoke-RestMethod -Uri "https://api.github.com/repos/kanishkp/groundwork/releases/latest" -ErrorAction Stop
+$release = Invoke-RestMethod -Uri "https://api.github.com/repos/Kanishkp2906/groundwork-cli/releases/latest" -ErrorAction Stop
 $version = $release.tag_name
 Write-Host "Latest version: $version" -ForegroundColor Green
 
-$assetName = "groundwork_${version}_windows_amd64.zip"
-$downloadUrl = "https://github.com/kanishkp/groundwork/releases/download/$version/$assetName"
+$assetName = "groundwork_$($version.TrimStart('v'))_windows_amd64.zip"
+$downloadUrl = "https://github.com/Kanishkp2906/groundwork-cli/releases/download/$version/$assetName"
 
 Write-Host "Downloading $assetName..." -ForegroundColor Blue
 
