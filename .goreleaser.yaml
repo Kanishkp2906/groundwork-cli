@@ -3,7 +3,7 @@ project_name: groundwork
 
 builds:
   - id: groundwork
-    main: main.go
+    main: .
     dir: ./go_client
     binary: groundwork
     ldflags:
