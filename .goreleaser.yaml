@@ -3,6 +3,7 @@
 # Install: go install github.com/goreleaser/goreleaser@latest
 # Run: goreleaser release --clean
 
+version: 2
 project_name: groundwork
 
 before:
