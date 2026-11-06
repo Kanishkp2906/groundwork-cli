@@ -1,88 +1,111 @@
 # GroundWork CLI
 
-> Real CVE training for developers — fix production bugs directly in your terminal.
+> **Real CVE Training for Developers** — Fix production bugs in your terminal.
 
-GroundWork is a terminal-based training tool that pulls real-world Common Vulnerabilities and Exposures (CVEs) from open-source projects and drops you into a simulated scenario. Read the Jira-style ticket, review the buggy code, write your fix, and test your security engineering skills against actual production patches.
+A terminal-based training platform where you fix real CVEs (Common Vulnerabilities and Exposures) in a realistic environment.
 
 ## Features
 
-* **Real-World Vulnerabilities:** Pulled directly from GitHub Advisories and Google's OSS-Fuzz database.
-* **Simulated Environment:** Every scenario includes a realistic bug ticket, severity rating, and AI-generated contextual hints.
-* **Instant Validation:** Submit your code to instantly verify if your logic matches the historical commit that fixed the CVE.
-* **Frictionless:** No accounts, no logins, no web portals. Just install and run.
-
-## Supported Languages
-
-* Python
-* JavaScript / Node.js
-* Java
-* C++
+- **Real vulnerabilities** — Based on actual CVEs from OSV.dev
+- **Real code** — Buggy code patterns from real GitHub commits
+- **Real feedback** — AI-powered code review with detailed explanations
+- **Multiple languages** — Python, JavaScript, Java, C++
 
 ## Installation
 
-GroundWork requires **macOS or Linux** (Windows is not natively supported due to strict Unix `tty` dependencies) and **Python 3.10+**.
+### Quick Install (Linux/macOS)
+```bash
+curl -fsSL https://raw.githubusercontent.com/kanishkP2906/groundwork-cli/main/install.sh | bash
+```
 
-You can install the CLI directly from PyPI:
+### Windows (PowerShell)
+```powershell
+iwr -useb https://raw.githubusercontent.com/kanishkp/groundwork/main/install.ps1 | iex
+```
 
+### Via pipx (recommended)
+```bash
+pipx install groundwork-cli
+```
+
+### Via pip
 ```bash
 pip install groundwork-cli
+```
 
+### From Source
+```bash
+git clone https://github.com/kanishkP2906/groundwork-cli.git
+cd groundwork-cli
+pip install -e .
 ```
 
 ## Usage
 
-Start a new training session by running:
-
 ```bash
+# Run the TUI
 groundwork
 
+# With custom server URL
+groundwork --server https://your-server.com
+
+# Show version
+groundwork --version
 ```
 
-Select your target language from the interactive menu. Once a ticket is loaded, use the following interactive commands:
+## How It Works
 
-* `[h]` - Request a hint
-* `[s]` - Submit your fixed code
-* `[r]` - Reveal the real-world solution and mental model
-* `[n]` - Start a new session
-* `[q]` - Quit the application
+1. **Pick a language** — Choose Python, JavaScript, Java, or C++
+2. **Get a ticket** — Receive a realistic Jira-style ticket with a real CVE
+3. **Read the code** — View the buggy code with syntax highlighting
+4. **Write your fix** — Edit in a full-featured editor (Ctrl+S to submit)
+4. **Get reviewed** — AI senior engineer reviews your fix and explains what you got right/missed
+
+## Key Bindings
+
+| Key | Action |
+|-----|--------|
+| `v` | View code (vim keys) |
+| `e` | Open editor (alt screen) |
+| `y` | Yank exact code to clipboard |
+| `h` | Get a hint |
+| `s` | Submit fix |
+| `n` | New ticket |
+| `?` | Full help |
+| `q` | Quit |
 
 ## Configuration
 
-By default, the CLI connects to the official GroundWork production server. If you are hosting your own GroundWork FastAPI backend for local development or an internal corporate network, you can override the target API using an environment variable:
-
 ```bash
-export GROUNDWORK_URL="http://localhost:8000"
-groundwork
+# Required: Point to your GroundWork server
+export GROUNDWORK_SERVER_URL=https://your-server.com
 
+# Or pass directly
+groundwork --server https://your-server.com
 ```
 
-## Local Development
+## Requirements
 
-If you want to contribute to the CLI or run it from source:
+- Python 3.10+
+- A running GroundWork server (local or remote)
 
-1. Clone the repository:
+## Development
+
 ```bash
-git clone https://github.com/yourusername/groundwork-cli.git
-cd groundwork-cli
-
-```
-
-
-2. Install the package in editable mode:
-```bash
+# Install in development mode
 pip install -e .
 
+# Run tests
+pytest
+
+# Format code
+black .
+ruff check .
+
+# Build package
+python -m build
 ```
-
-
-3. Run the CLI:
-```bash
-groundwork
-
-```
-
-
 
 ## License
 
-MIT
+MIT License — see [LICENSE](LICENSE) for details.

@@ -4,22 +4,32 @@ build-backend = "hatchling.build"
 
 [project]
 name = "groundwork-cli"
-version = "0.1.3"
+version = "0.2.0"
 description = "Real CVE training for developers — fix production bugs in your terminal"
 readme = "README.md"
-requires-python = ">=3.10"
 license = { text = "MIT" }
 authors = [
   { name = "Kanishk", email = "kanishkprasad03@gmail.com" }
 ]
+requires-python = ">=3.10"
 dependencies = [
-  "httpx",
+  "httpx>=0.27.0",
+  "rich>=13.7.0",
 ]
 classifiers = [
+    "Development Status :: 4 - Beta",
     "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
     "Environment :: Console",
     "Operating System :: POSIX :: Linux",
     "Operating System :: MacOS :: MacOS X",
+    "License :: OSI Approved :: MIT License",
+    "Topic :: Education",
+    "Topic :: Security",
+    "Topic :: Software Development :: Debuggers",
 ]
 
 [project.scripts]
@@ -27,6 +37,14 @@ groundwork = "groundwork.cli:main"
 
 [project.urls]
 Homepage = "https://github.com/kanishkP2906/groundwork-cli"
+Repository = "https://github.com/kanishkP2906/groundwork-cli"
+Issues = "https://github.com/kanishkP2906/groundwork-cli/issues"
 
 [tool.hatch.build.targets.wheel]
 packages = ["groundwork"]
+
+[tool.hatch.metadata]
+allow-direct-references = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

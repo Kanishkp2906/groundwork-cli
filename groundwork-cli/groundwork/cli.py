@@ -136,8 +136,7 @@ async def run():
             # ── Fetch ticket ──────────────────────────────────────
             try:
                 resp = await client.get(
-                    f"{SERVER_URL}/ticket",
-                    params={"language": language},
+                    f"{SERVER_URL}/{language}/ticket",
                     headers=headers,
                 )
                 resp.raise_for_status()
@@ -206,7 +205,7 @@ async def run():
                 if choice == "h":
                     try:
                         resp = await client.get(
-                            f"{SERVER_URL}/hint", params={"session_id": session_id}
+                            f"{SERVER_URL}/{session_id}/hint",
                         )
                         resp.raise_for_status()
                         data = resp.json()
@@ -281,7 +280,7 @@ async def run():
                 elif choice == "r":
                     try:
                         resp = await client.get(
-                            f"{SERVER_URL}/solution", params={"session_id": session_id}
+                            f"{SERVER_URL}/{session_id}/solution",
                         )
                         resp.raise_for_status()
                         sol = resp.json()
