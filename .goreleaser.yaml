@@ -3,12 +3,13 @@ project_name: groundwork
 
 before:
   hooks:
-    - go mod tidy
-    - go generate ./...
+    - cd go_client && go mod tidy
+    - cd go_client && go generate ./...
 
 builds:
   - id: groundwork
     main: ./go_client/main.go
+    dir: ./go_client
     binary: groundwork
     ldflags:
       - -s -w
