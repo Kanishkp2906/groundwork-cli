@@ -57,18 +57,18 @@ changelog:
 
 release:
   github:
-    owner: kanishkp
-    name: groundwork
+    owner: Kanishkp2906
+    name: groundwork-cli
   draft: false
   prerelease: auto
 
 brews:
   - name: groundwork
     tap:
-      owner: kanishkp
+      owner: Kanishkp2906
       name: homebrew-tap
     folder: Formula
-    homepage: "https://github.com/kanishkp/groundwork"
+    homepage: "https://github.com/Kanishkp2906/groundwork-cli"
     description: "GroundWork TUI - Real CVE Training for Developers"
     license: "MIT"
     install: |
@@ -78,9 +78,9 @@ brews:
 
 scoop:
   bucket:
-    owner: kanishkp
+    owner: Kanishkp2906
     name: scoop-bucket
-  homepage: "https://github.com/kanishkp/groundwork"
+  homepage: "https://github.com/Kanishkp2906/groundwork-cli"
   description: "GroundWork TUI - Real CVE Training for Developers"
   license: "MIT"
 
@@ -91,17 +91,17 @@ chocolatey:
   owners: ["kanishkp"]
   description: "GroundWork TUI - Real CVE Training for Developers"
   summary: "A terminal UI for practicing real CVE fixes"
-  projectUrl: "https://github.com/kanishkp/groundwork"
-  licenseUrl: "https://github.com/kanishkp/groundwork/blob/main/LICENSE"
-  iconUrl: "https://github.com/kanishkp/groundwork/raw/main/icon.png"
+  projectUrl: "https://github.com/Kanishkp2906/groundwork-cli"
+  licenseUrl: "https://github.com/Kanishkp2906/groundwork-cli/blob/main/LICENSE"
+  iconUrl: "https://github.com/Kanishkp2906/groundwork-cli/raw/main/icon.png"
   tags: ["tui", "cve", "security", "training", "developer-tools"]
-  packageSourceUrl: "https://github.com/kanishkp/groundwork/releases/download/v{{.Version}}/groundwork_{{.Version}}_windows_amd64.zip"
-  checksumUrl: "https://github.com/kanishkp/groundwork/releases/download/v{{.Version}}/checksums.txt"
+  packageSourceUrl: "https://github.com/Kanishkp2906/groundwork-cli/releases/download/v{{.Version}}/groundwork_{{.Version}}_windows_amd64.zip"
+  checksumUrl: "https://github.com/Kanishkp2906/groundwork-cli/releases/download/v{{.Version}}/checksums.txt"
 
 docker:
   - image_templates:
-      - "ghcr.io/kanishkp/groundwork:{{ .Version }}"
-      - "ghcr.io/kanishkp/groundwork:latest"
+      - "ghcr.io/kanishkp2906/groundwork:{{ .Version }}"
+      - "ghcr.io/kanishkp2906/groundwork:latest"
     dockerfile: Dockerfile
     build_flag_templates:
       - "--platform=linux/amd64,linux/arm64"
