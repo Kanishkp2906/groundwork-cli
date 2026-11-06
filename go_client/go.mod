@@ -1,4 +1,4 @@
-module groundwork/tui.com
+module github.com/kanishkp/groundwork
 
 go 1.27.1
 

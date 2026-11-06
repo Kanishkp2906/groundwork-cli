@@ -7,19 +7,18 @@ Optimizations:
 - Parallel OSV detail fetching via asyncio.gather
 - Redis caching of generated scenarios (24h TTL)
 """
+
 import asyncio
 import httpx
 import random
 import json
 import os
 import redis
-from google import genai
 from groq import Groq
 from dotenv import load_dotenv
 from language_conf import LANGUAGE_CONF
 
 load_dotenv()
-gemini_client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
 groq_client = Groq(api_key=os.getenv("GROQ_API_KEY"))
 
 # Redis for caching scenarios
@@ -34,6 +33,8 @@ except Exception:
 
 CACHE_TTL = 86400  # 24 hours
 CONCURRENCY_LIMIT = 15  # Max concurrent OSV detail requests
+OSV_TIMEOUT = 30.0  # Increased timeout for slower packages (Java/JS)
+MAX_RETRIES = 3
 
 
 async def fetch_cve_metadata(language: str = "python", limit: int = 100) -> list:
@@ -68,38 +69,56 @@ async def fetch_cve_metadata(language: str = "python", limit: int = 100) -> list
         if not vuln_id:
             return None
 
-        async with httpx.AsyncClient(timeout=15) as client:
-            detail_resp = await client.get(f"https://api.osv.dev/v1/vulns/{vuln_id}")
-            if detail_resp.status_code != 200:
+        # Retry with exponential backoff
+        for attempt in range(MAX_RETRIES):
+            try:
+                async with httpx.AsyncClient(timeout=OSV_TIMEOUT) as client:
+                    detail_resp = await client.get(f"https://api.osv.dev/v1/vulns/{vuln_id}")
+                    if detail_resp.status_code != 200:
+                        if attempt < MAX_RETRIES - 1:
+                            await asyncio.sleep(2 ** attempt)  # Exponential backoff
+                            continue
+                        return None
+
+                    full_vuln = detail_resp.json()
+
+                    affected = full_vuln.get("affected", [])
+                    pkg_name = ""
+                    if affected:
+                        pkg_name = affected[0].get("package", {}).get("name", "unknown")
+
+                    severity = "HIGH"
+                    db_specific = full_vuln.get("database_specific", {})
+                    if db_specific.get("severity"):
+                        severity = db_specific["severity"]
+
+                    cwe = ""
+                    for ref in full_vuln.get("references", []):
+                        if "cwe" in ref.get("url", "").lower():
+                            cwe = ref["url"].split("/")[-1]
+                            break
+
+                    return {
+                        "id": vuln_id,
+                        "summary": full_vuln.get("summary", "Security vulnerability"),
+                        "details": full_vuln.get("details", ""),
+                        "severity": severity,
+                        "package": pkg_name,
+                        "cwe": cwe,
+                        "references": full_vuln.get("references", []),
+                    }
+
+            except (httpx.TimeoutException, httpx.ConnectError) as e:
+                if attempt < MAX_RETRIES - 1:
+                    await asyncio.sleep(2 ** attempt)  # Exponential backoff
+                    continue
+                print(f"[DEBUG] {vuln_id}: timeout/connect error after {MAX_RETRIES} attempts")
+                return None
+            except Exception as e:
+                print(f"[DEBUG] {vuln_id}: unexpected error — {e}")
                 return None
 
-            full_vuln = detail_resp.json()
-
-            affected = full_vuln.get("affected", [])
-            pkg_name = ""
-            if affected:
-                pkg_name = affected[0].get("package", {}).get("name", "unknown")
-
-            severity = "HIGH"
-            db_specific = full_vuln.get("database_specific", {})
-            if db_specific.get("severity"):
-                severity = db_specific["severity"]
-
-            cwe = ""
-            for ref in full_vuln.get("references", []):
-                if "cwe" in ref.get("url", "").lower():
-                    cwe = ref["url"].split("/")[-1]
-                    break
-
-            return {
-                "id": vuln_id,
-                "summary": full_vuln.get("summary", "Security vulnerability"),
-                "details": full_vuln.get("details", ""),
-                "severity": severity,
-                "package": pkg_name,
-                "cwe": cwe,
-                "references": full_vuln.get("references", []),
-            }
+        return None
 
     # Run with bounded concurrency
     sem = asyncio.Semaphore(CONCURRENCY_LIMIT)

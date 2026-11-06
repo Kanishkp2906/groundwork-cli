@@ -20,7 +20,6 @@ redis_url = os.getenv("UPSTASH_REDIS_URL")
 
 try:
     redis_manager = redis.Redis.from_url(redis_url)
-    # redis_manager = redis.Redis(host="localhost", port="6379", decode_responses=True)
 
     if redis_manager.ping():
         print("Connected to redis successfully.")
@@ -34,7 +33,7 @@ limiter = Limiter(key_func=get_remote_address)
 app = FastAPI(
     title="Groundwork API",
     description="Real CVE training for developers",
-    version="0.1.0",
+    version="0.2.0",
 )
 
 app.state.limiter = limiter
@@ -58,7 +57,7 @@ class EvaluateRequest(BaseModel):
 async def root(request: Request):
     return {
         "name": "Groundwork API",
-        "version": "0.1.0",
+        "version": "0.2.0",
         "status": "running",
     }
 

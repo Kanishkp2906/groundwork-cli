@@ -1,0 +1,125 @@
+# .goreleaser.yaml
+# Cross-platform release configuration for GroundWork TUI
+# Install: go install github.com/goreleaser/goreleaser@latest
+# Run: goreleaser release --clean
+
+project_name: groundwork
+
+before:
+  hooks:
+    - go mod tidy
+    - go generate ./...
+
+builds:
+  - id: groundwork
+    main: ./go_client/main.go
+    binary: groundwork
+    ldflags:
+      - -s -w
+      - -X main.version={{.Version}}
+      - -X main.commit={{.Commit}}
+      - -X main.date={{.Date}}
+    goos:
+      - linux
+      - darwin
+      - windows
+    goarch:
+      - amd64
+      - arm64
+    ignore:
+      - goos: windows
+        goarch: arm64
+
+archives:
+  - format: tar.gz
+    name_template: >-
+      {{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}
+    files:
+      - LICENSE
+      - README.md
+    format_overrides:
+      - goos: windows
+        format: zip
+
+checksum:
+  name_template: 'checksums.txt'
+
+snapshot:
+  version_template: "{{ .Tag }}-next"
+
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - '^docs:'
+      - '^test:'
+      - '^chore:'
+
+release:
+  github:
+    owner: kanishkp
+    name: groundwork
+  draft: false
+  prerelease: auto
+
+brews:
+  - name: groundwork
+    tap:
+      owner: kanishkp
+      name: homebrew-tap
+    folder: Formula
+    homepage: "https://github.com/kanishkp/groundwork"
+    description: "GroundWork TUI - Real CVE Training for Developers"
+    license: "MIT"
+    install: |
+      bin.install "groundwork"
+    test: |
+      system "#{bin}/groundwork --help"
+
+scoop:
+  bucket:
+    owner: kanishkp
+    name: scoop-bucket
+  homepage: "https://github.com/kanishkp/groundwork"
+  description: "GroundWork TUI - Real CVE Training for Developers"
+  license: "MIT"
+
+chocolatey:
+  name: groundwork
+  title: "GroundWork TUI"
+  authors: ["kanishkp"]
+  owners: ["kanishkp"]
+  description: "GroundWork TUI - Real CVE Training for Developers"
+  summary: "A terminal UI for practicing real CVE fixes"
+  projectUrl: "https://github.com/kanishkp/groundwork"
+  licenseUrl: "https://github.com/kanishkp/groundwork/blob/main/LICENSE"
+  iconUrl: "https://github.com/kanishkp/groundwork/raw/main/icon.png"
+  tags: ["tui", "cve", "security", "training", "developer-tools"]
+  packageSourceUrl: "https://github.com/kanishkp/groundwork/releases/download/v{{.Version}}/groundwork_{{.Version}}_windows_amd64.zip"
+  checksumUrl: "https://github.com/kanishkp/groundwork/releases/download/v{{.Version}}/checksums.txt"
+
+docker:
+  - image_templates:
+      - "ghcr.io/kanishkp/groundwork:{{ .Version }}"
+      - "ghcr.io/kanishkp/groundwork:latest"
+    dockerfile: Dockerfile
+    build_flag_templates:
+      - "--platform=linux/amd64,linux/arm64"
+
+announce:
+  twitter:
+    enabled: false
+  mastodon:
+    enabled: false
+  bluesky:
+    enabled: false
+  linkedin:
+    enabled: false
+  reddit:
+    enabled: false
+  discord:
+    enabled: false
+  slack:
+    enabled: false
+  teams:
+    enabled: false

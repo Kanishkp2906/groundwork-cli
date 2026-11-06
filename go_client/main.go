@@ -10,11 +10,16 @@ import (
 )
 
 const (
-	// defaultServerURL points at a local server, per the existing go_client
-	// main.go. The production endpoint used by groundwork-cli is
-	// https://kanishkp2906-groundwork-server.hf.space
-	defaultServerURL = "http://localhost:8000"
+	// defaultServerURL points at the production GroundWork server on Hugging Face
+	defaultServerURL = "https://kanishkp2906-groundwork-server.hf.space"
 	serverURLEnvKey  = "GROUNDWORK_SERVER_URL"
+)
+
+// Version info (set via ldflags at build time)
+var (
+	version = "dev"
+	commit  = "none"
+	date    = "unknown"
 )
 
 func main() {
@@ -23,7 +28,13 @@ func main() {
 		firstNonEmpty(os.Getenv(serverURLEnvKey), defaultServerURL),
 		"GroundWork server URL (default: $GROUNDWORK_SERVER_URL or "+defaultServerURL+")",
 	)
+	showVersion := flag.Bool("version", false, "Print version and exit")
 	flag.Parse()
+
+	if *showVersion {
+		fmt.Printf("GroundWork TUI %s (commit: %s, built: %s)\n", version, commit, date)
+		return
+	}
 
 	if strings.TrimSpace(*server) == "" {
 		*server = defaultServerURL

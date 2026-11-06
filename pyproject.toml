@@ -11,6 +11,7 @@ dependencies = [
     "google-genai>=1.73.1",
     "groq>=1.2.0",
     "httpx>=0.28.1",
+    "langchain-nvidia-ai-endpoints>=1.5.0",
     "pydantic>=2.13.3",
     "python-dotenv>=1.2.2",
     "redis>=7.4.0",
