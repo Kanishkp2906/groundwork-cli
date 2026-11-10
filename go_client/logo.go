@@ -23,11 +23,11 @@ var (
 			MarginBottom(1)
 )
 
-// The new Unicode block logo
-const groundworkLogo = " ▗▄▄▖▗▄▄▖  ▗▄▖ ▗▖ ▗▖▗▖  ▗▖▗▄▄▄ ▗▖ ▗▖ ▗▄▖ ▗▄▄▖ ▗▖ ▗▖\n" +
-	"▐▌   ▐▌ ▐▌▐▌ ▐▌▐▌ ▐▌▐▛▚▖▐▌▐▌  █▐▌ ▐▌▐▌ ▐▌▐▌ ▐▌▐▌▗▞▘\n" +
-	"▐▌▝▜▌▐▛▀▚▖▐▌ ▐▌▐▌ ▐▌▐▌ ▝▜▌▐▌  █▐▌ ▐▌▐▌ ▐▌▐▛▀▚▖▐▛▚▖ \n" +
-	"▝▚▄▞▘▐▌ ▐▌▝▚▄▞▘▝▚▄▞▘▐▌  ▐▌▐▙▄▄▀▐▙█▟▌▝▚▄▞▘▐▌ ▐▌▐▌ ▐▌"
+// groundworkLogo is the figlet-style block logo. Lines are kept byte-identical
+// (including trailing spaces) so lipgloss width math and subtitle centering stay exact.
+const groundworkLogo = "▄▀▀▀  █▀▀▄ ▄▀▀▀▄ █  █ █▄  █ █▀▀▄ █   █ ▄▀▀▀▄ █▀▀▄ █ ▄▀\n" +
+	"█  ▀█ █▀▀▄ █   █ █  █ █ ▀▄█ █  █ █ ▄ █ █   █ █▀▀▄ █▀▄ \n" +
+	" ▀▀▀  ▀  ▀  ▀▀▀   ▀▀  ▀   ▀ ▀▀▀   ▀ ▀   ▀▀▀  ▀  ▀ ▀  ▀ "
 
 // logoBlock returns the Unicode logo with centered subtitle.
 func logoBlock(width int) string {
