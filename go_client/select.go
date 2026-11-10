@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"strings"
 
 	"charm.land/bubbles/v2/key"
@@ -74,21 +73,13 @@ func (m selectModel) view(width, height int) string {
 	b.WriteString(optionsTitleStyle.Render("Select a language to debug a real CVE:"))
 	b.WriteString("\n\n")
 
-	// Language options
+	// Language options — simple list, marker on the selected row
 	for i, lang := range languageOptions {
-		label := fmt.Sprintf("%d. %s", i+1, lang.Label)
 		if i == m.cursor {
-			b.WriteString(selectedItemStyle.Render("› " + label))
+			b.WriteString(selectedItemStyle.Render("› " + lang.Label))
 		} else {
-			b.WriteString(normalItemStyle.Render(label))
+			b.WriteString(normalItemStyle.Render(lang.Label))
 		}
-		b.WriteString("\n")
-
-		note := "     " + lang.Note
-		if i == m.cursor {
-			note = "       " + lang.Note
-		}
-		b.WriteString(dimStyle.Render(note))
 		b.WriteString("\n")
 	}
 
@@ -104,8 +95,15 @@ func (m selectModel) view(width, height int) string {
 
 	content := b.String()
 
-	// Left-align the entire content vertically in the terminal
-	return lipgloss.Place(width, height, lipgloss.Left, lipgloss.Center, content)
+	// Pad every line to the widest line so Place centers the block as a
+	// single sheet (left-aligned rows inside a centered card) instead of
+	// centering each line individually.
+	content = lipgloss.NewStyle().
+		Width(lipgloss.Width(content)).
+		Render(content)
+
+	// Center the whole sheet horizontally and vertically in the terminal
+	return lipgloss.Place(width, height, lipgloss.Center, lipgloss.Center, content)
 }
 
 func hintPair(b key.Binding) string {

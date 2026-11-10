@@ -29,7 +29,8 @@ const groundworkLogo = "▄▀▀▀  █▀▀▄ ▄▀▀▀▄ █  █ █�
 	"█  ▀█ █▀▀▄ █   █ █  █ █ ▀▄█ █  █ █ ▄ █ █   █ █▀▀▄ █▀▄ \n" +
 	" ▀▀▀  ▀  ▀  ▀▀▀   ▀▀  ▀   ▀ ▀▀▀   ▀ ▀   ▀▀▀  ▀  ▀ ▀  ▀ "
 
-// logoBlock returns the Unicode logo with centered subtitle.
+// logoBlock returns the boxed Unicode logo with centered subtitle. Placement
+// is up to the caller, so screens can left-align or center the whole layout.
 func logoBlock(width int) string {
 	art := logoArtStyle.Render(groundworkLogo)
 
@@ -45,7 +46,7 @@ func logoBlock(width int) string {
 
 	boxed := logoBoxStyle.Render(content)
 
-	return lipgloss.PlaceHorizontal(width, lipgloss.Left, boxed)
+	return boxed
 }
 
 // smallLogo returns a compact version for loading screens.
