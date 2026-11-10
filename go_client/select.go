@@ -4,6 +4,7 @@ import (
 	"strings"
 
 	"charm.land/bubbles/v2/key"
+	"charm.land/bubbles/v2/list"
 	tea "charm.land/bubbletea/v2"
 	"charm.land/lipgloss/v2"
 )
@@ -24,86 +25,105 @@ var languageOptions = []languageOption{
 	{"C/C++", "c++", "curl · libpng · libtiff · ffmpeg · sqlite3"},
 }
 
-// selectModel is the language picker shown under the GroundWork logo.
+// selectItem adapts a languageOption to the bubbles fancy list: the language
+// label as the title, its package pools as the dimmed description underneath.
+type selectItem struct{ lang languageOption }
+
+func (i selectItem) Title() string       { return i.lang.Label }
+func (i selectItem) Description() string { return i.lang.Note }
+func (i selectItem) FilterValue() string { return i.lang.Label }
+
+// selectModel is the language picker shown under the GroundWork logo, backed
+// by the bubbles fancy list (title bar, status bar, paginated items).
 type selectModel struct {
-	cursor   int
-	quitting bool
-	keys     selectKeys
+	list list.Model
+	keys selectKeys
 }
 
 func newSelectModel() selectModel {
-	return selectModel{keys: newSelectKeys()}
+	items := make([]list.Item, 0, len(languageOptions))
+	for _, lang := range languageOptions {
+		items = append(items, selectItem{lang})
+	}
+
+	delegate := list.NewDefaultDelegate()
+	// Two-line rows: title (language) + description (package pools) — the
+	// delegate's default height of 2 and spacing of 1 give the airy fancy look.
+
+	l := list.New(items, delegate, 60, 10)
+	l.Title = "Select a language to debug a real CVE:"
+	// Stock TitleBar padding bottom (1 row) = the gap between the title and
+	// the items. StatusBar is hidden, so its style is untouched.
+	l.Styles.TitleBar = l.Styles.TitleBar.Padding(0, 0, 1, 2)
+	l.SetShowStatusBar(false) // no "N items" counter (user call)
+	l.SetShowHelp(false)      // the picker draws its own dim help line
+	// Filtering and pagination keep their stock defaults: '/' filters,
+	// and the dots render only when a real page break exists.
+
+	return selectModel{keys: newSelectKeys(), list: l}
 }
 
-func (m selectModel) choice() (languageOption, bool) {
-	if m.quitting || len(languageOptions) == 0 {
-		return languageOption{}, false
+// resize fits the list into the space left by the logo box + help line. Called
+// from app.resize() on every WindowSizeMsg.
+func (m *selectModel) resize(w, h int) {
+	// Fitted to the v2 list layout: title bar (1) + its padding gap (1) +
+	// the pager's reserved dots row (1) + one page of 4×2-line items with
+	// 1-row gaps needs 15 rows. Below that the dots page item 4 away.
+	listH := min(15, max(6, h-11))
+	listW := min(62, w-2)
+	if listW < 16 {
+		listW = max(16, w)
 	}
-	return languageOptions[m.cursor%len(languageOptions)], true
+	m.list.SetSize(listW, listH)
 }
 
 func (m selectModel) update(msg tea.Msg) (selectModel, tea.Cmd) {
-	if msg, ok := msg.(tea.KeyPressMsg); ok {
-		switch {
-		case keyMatches(msg, m.keys.moveUp):
-			m.cursor = (m.cursor - 1 + len(languageOptions)) % len(languageOptions)
-		case keyMatches(msg, m.keys.moveDown):
-			m.cursor = (m.cursor + 1) % len(languageOptions)
-		case keyMatches(msg, m.keys.choose):
-			if choice, ok := m.choice(); ok {
-				// Enter confirms the language; the app cycles into loading mode.
-				return m, chooseLanguageCmd(choice)
-			}
-		case keyMatches(msg, m.keys.quit):
-			m.quitting = true
+	if km, ok := msg.(tea.KeyPressMsg); ok {
+		// Quit belongs to this screen, never to the list component.
+		if keyMatches(km, m.keys.quit) {
 			return m, tea.Quit
 		}
 	}
-	return m, nil
+
+	// The fancy list owns navigation: arrows, k/j, home/end, mouse wheel…
+	var cmd tea.Cmd
+	m.list, cmd = m.list.Update(msg)
+
+	// Enter picks the highlighted language and cycles into loading. While
+	// the stock '/' filter is open, Enter accepts the filter instead.
+	if km, ok := msg.(tea.KeyPressMsg); ok && keyMatches(km, m.keys.choose) &&
+		m.list.FilterState() != list.Filtering {
+		if it, ok := m.list.SelectedItem().(selectItem); ok {
+			return m, chooseLanguageCmd(it.lang)
+		}
+	}
+
+	return m, cmd
 }
 
 func (m selectModel) view(width, height int) string {
-	var b strings.Builder
+	// JoinVertical pads every row to the sheet width, so Place centers the
+	// block as one sheet (left-aligned rows inside a centered card).
+	content := lipgloss.JoinVertical(lipgloss.Left,
+		logoBlock(width),
+		"",
+		m.list.View(),
+		"",
+		helpLine(m.keys),
+	)
 
-	// Logo
-	b.WriteString(logoBlock(width))
-	b.WriteString("\n\n")
-
-	// Title
-	b.WriteString(optionsTitleStyle.Render("Select a language to debug a real CVE:"))
-	b.WriteString("\n\n")
-
-	// Language options — simple list, marker on the selected row
-	for i, lang := range languageOptions {
-		if i == m.cursor {
-			b.WriteString(selectedItemStyle.Render("› " + lang.Label))
-		} else {
-			b.WriteString(normalItemStyle.Render(lang.Label))
-		}
-		b.WriteString("\n")
-	}
-
-	// Help line
-	b.WriteString("\n")
-	b.WriteString(dimStyle.Render(strings.Join([]string{
-		hintPair(m.keys.moveUp),
-		hintPair(m.keys.moveDown),
-		hintPair(m.keys.choose),
-		hintPair(m.keys.quit),
-	}, "  ·  ")))
-	b.WriteString("\n")
-
-	content := b.String()
-
-	// Pad every line to the widest line so Place centers the block as a
-	// single sheet (left-aligned rows inside a centered card) instead of
-	// centering each line individually.
-	content = lipgloss.NewStyle().
-		Width(lipgloss.Width(content)).
-		Render(content)
-
-	// Center the whole sheet horizontally and vertically in the terminal
 	return lipgloss.Place(width, height, lipgloss.Center, lipgloss.Center, content)
+}
+
+func helpLine(keys selectKeys) string {
+	parts := []string{
+		hintPair(keys.moveUp),
+		hintPair(keys.moveDown),
+		"/ filter",
+		hintPair(keys.choose),
+		hintPair(keys.quit),
+	}
+	return dimStyle.Render(strings.Join(parts, "  ·  "))
 }
 
 func hintPair(b key.Binding) string {

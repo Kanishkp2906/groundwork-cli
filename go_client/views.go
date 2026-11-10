@@ -107,8 +107,8 @@ func (a app) loadingView() string {
 	sub := dimStyle.Render("The CVE pipeline can take up to a minute — hold tight.")
 	quitLine := dimStyle.Render("ctrl+c to cancel")
 
-	// Use small logo for loading
-	logo := smallLogo(a.width)
+	// Use the logo box for loading (same block art, no tagline)
+	logo := logoBlock(a.width)
 
 	// Build content
 	content := strings.Join([]string{

@@ -401,7 +401,6 @@ func (a *app) pickNewTicket() {
 	a.busy = busyNone
 	a.fixDirty = false
 	a.confirm = false
-	a.selectModel.quitting = false
 	a.screen = screenSelect
 }
 
@@ -417,6 +416,7 @@ func (a *app) resize() {
 	a.vp.SetHeight(max(3, a.height-reserved))
 	a.codeViewer.resize(a.width, a.height)
 	a.editor.resize(a.width, a.height)
+	a.selectModel.resize(a.width, a.height)
 }
 
 // invalidateBody marks the rendered document stale and rebuilds it when the
