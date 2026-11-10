@@ -120,8 +120,15 @@ func (a app) loadingView() string {
 		"  " + quitLine,
 	}, "\n")
 
-	// Left-align vertically in the terminal
-	return lipgloss.Place(a.width, a.height, lipgloss.Left, lipgloss.Center, content)
+	// Pad every line to the widest line so Place centers the block as a
+	// single sheet (rows stay left-aligned inside the centered card)
+	// instead of centering each line individually.
+	content = lipgloss.NewStyle().
+		Width(lipgloss.Width(content)).
+		Render(content)
+
+	// Center the whole sheet horizontally and vertically in the terminal
+	return lipgloss.Place(a.width, a.height, lipgloss.Center, lipgloss.Center, content)
 }
 
 // mainView: rendered document filling the screen, status, busy line and help.
